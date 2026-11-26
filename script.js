@@ -75,22 +75,13 @@ init();
 const scrollButton = document.getElementById('scroll-btn');
 if (scrollButton) {
     scrollButton.addEventListener('click', () => {
-        // Разрешить прокрутку
-
-
-        // Изменить размер окна (например, увеличить высоту)
-        document.body.style.height = '2000px'; // Увеличиваем высоту страницы
-
-        // Прокрутить до конца страницы с задержкой
-        setTimeout(() => {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth"
-            });
- 
-            // Создание золотых кругов после прокрутки
-            createGoldCircles();
-        }, 50); // Задержка перед началом прокрутки
+        const target = document.getElementById('countdownContainer');
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (typeof createGoldCircles === 'function') {
+            setTimeout(createGoldCircles, 400);
+        }
     });
 }
 
