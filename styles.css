@@ -2,6 +2,10 @@ html {
     scroll-behavior: smooth;
     margin: 0;
     overflow-x: hidden;
+    min-height: 100%;
+    background: linear-gradient(to bottom, rgb(0, 72, 149), rgb(75, 171, 226)) fixed;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 
 @font-face {
@@ -14,16 +18,18 @@ html {
 
 body {
     margin: 0;
-    height: 2000px;
-    background: linear-gradient(to bottom, rgb(0, 72, 149), rgb(75, 171, 226));
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: transparent;
 }
 
 .container {
-    flex: 1;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
+    width: 100%;
 }
 
 canvas {
@@ -33,12 +39,12 @@ canvas {
     width: 100%;
     height: 100vh;
     pointer-events: none;
-    z-index: 0;
+    z-index: 100;
 }
 
 /* ================= Текст + кнопки ================= */
 .box-text {
-    width: 100vw;
+    width: 100%;
     margin-top: 350px;
     position: absolute;
     display: flex;
@@ -46,11 +52,9 @@ canvas {
     align-items: center;
     justify-content: center;
     gap: 20px;
-    z-index: 5; /* чтобы текст был поверх облаков */
-    box-sizing: border-box;
+    z-index: 5;
 }
 
-/* Новая обёртка для двух кнопок */
 .btn-group {
     display: flex;
     flex-direction: row;
@@ -164,14 +168,14 @@ canvas {
 /* ================= Счётчик ================= */
 #countdownContainer {
     background: linear-gradient(to bottom, rgba(20, 114, 215, 0.035), rgba(137, 176, 219, 0.825), rgba(162, 193, 211, 0.806), rgba(109, 161, 216, 0.049));
-    position: absolute;
-    top: 1550px;
+    position: relative;
+    margin-top: 1400px;
     width: 100%;
     text-align: center;
     font-family: 'Caveat', cursive;
     color: #b11818;
     z-index: 5;
-    box-sizing: border-box;
+    padding: 40px 0 60px;
 }
 #countdownContainer h1 {
     letter-spacing: .150rem;
@@ -183,7 +187,7 @@ canvas {
 #countdownContainer ul { margin: 0; padding: 0; }
 #countdownContainer li {
     display: inline-block;
-    font-size: 3em;
+    font-size: 4em;
     list-style-type: none;
     padding: 25px;
     text-transform: uppercase;
@@ -199,150 +203,50 @@ canvas {
 /* ================= АДАПТАЦИЯ ========================= */
 /* ===================================================== */
 
-/* Планшеты и небольшие ноутбуки */
 @media (max-width: 1024px) {
-    .box-text {
-        flex-direction: column;   /* заголовок сверху, кнопки снизу */
-        margin-top: 220px;
-        gap: 30px;
-        padding: 0 20px;
-    }
-
-    .title {
-        width: 100%;
-        max-width: 100%;
-        white-space: normal;
-        overflow: visible;
-        border-right: none;
-        font-size: clamp(40px, 7vw, 64px);
-        line-height: 1.15;
-        opacity: 0;
-        animation: fadeInTitle 1s ease forwards;
-    }
-
-    @keyframes fadeInTitle {
-        from { opacity: 0; transform: translateY(-16px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .btn {
-        min-width: 200px;
-    }
-
-    #countdownContainer { top: 1350px; }
+    .box-text { margin-top: 250px; }
+    .title { font-size: 64px; }
+    .btn { min-width: 180px; font-size: 16px; }
 }
 
-/* Телефоны (портрет) */
 @media (max-width: 768px) {
-    body { height: 1400px; }
-
     .box-text {
-        margin-top: 110px;
-        gap: 20px;
+        flex-direction: column;
+        margin-top: 140px;
+        gap: 30px;
         padding: 0 16px;
     }
 
     .title {
-        font-size: clamp(28px, 9vw, 44px);
+        font-size: clamp(28px, 8vw, 42px);
+        width: auto;
+        max-width: 0;
+        animation: typing-mobile 10s forwards;
+        border-right: .15em solid #ae0034;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
     }
 
-    .btn-group {
-        gap: 16px;
+    @keyframes typing-mobile {
+        from { max-width: 0 }
+        to   { max-width: 100% }
     }
 
-    .btn {
-        flex: 1 1 150px;
-        min-width: 0;
-        max-width: 240px;
-        font-size: 15px;
-        padding: 10px 14px;
-        box-sizing: border-box;
-    }
+    .btn-group { gap: 15px; width: 100%; }
+    .btn { min-width: 170px; max-width: 230px; font-size: 15px; padding: 7px 14px; }
+    .btn-hat { height: 34px; top: -11px; left: -13px; }
 
-    .btn-hat {
-        height: 30px;
-        top: -10px;
-        left: -10px;
-    }
-
-    /* Верхние облака — меньше, чтобы не заслоняли текст */
-    .cloud {
-        width: 140px;
-        height: 70px;
-        opacity: 0.75;
-    }
-
-    /* Нижние облака — подгоняем под компактную высоту */
-    #cloud1_down  { width: 110px; height: 90px;  top: 640px; left: 5%;  }
-    #cloud2_down  { width: 120px; height: 130px; top: 640px; left: 55%; }
-    #cloud3_down  { width: 140px; height: 130px; top: 560px; left: 70%; }
-    #cloud4_down  { width: 110px; height: 90px;  top: 700px; left: 78%; }
-    #cloud5_down  { width: 180px; height: 150px; top: 560px; left: 20%; }
-    #cloud6_down  { width: 110px; height: 90px;  top: 850px; left: 0%;  }
-    #cloud7_down  { width: 150px; height: 150px; top: 830px; left: 55%; }
-    #cloud8_down  { width: 110px; height: 90px;  top: 900px; left: 75%; }
-    #cloud9_down  { width: 130px; height: 120px; top: 760px; left: 38%; }
-    #cloud10_down { width: 160px; height: 170px; top: 730px; left: 15%; }
-
-    /* Счётчик */
-    #countdownContainer {
-        top: 1000px;
-    }
-
-    #countdownContainer h1 {
-        font-size: 15px;
-        letter-spacing: 1px;
-        padding: 0 12px;
-        line-height: 1.4;
-    }
-
-    #countdownContainer ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    #countdownContainer li {
-        font-size: 13px;
-        padding: 8px 10px;
-    }
-
-    #countdownContainer li span {
-        font-size: 30px;
-        line-height: 1.2;
-    }
+    #countdownContainer { margin-top: 1000px; padding: 20px 0 30px; }
+    #countdownContainer h1 { font-size: 15px; letter-spacing: 1px; }
+    #countdownContainer li { font-size: 13px; padding: 8px 10px; }
+    #countdownContainer li span { font-size: 30px; }
 }
 
-/* Очень узкие телефоны */
 @media (max-width: 380px) {
-    .box-text {
-        margin-top: 90px;
-        gap: 16px;
-    }
-
-    .title {
-        font-size: 30px;
-    }
-
-    .btn-group {
-        flex-direction: column;   /* кнопки в столбик */
-        align-items: stretch;
-        width: 100%;
-    }
-
-    .btn {
-        max-width: none;
-        width: 100%;
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-
-    #countdownContainer li span {
-        font-size: 26px;
-    }
-
-    #countdownContainer li {
-        font-size: 12px;
-        padding: 6px;
-    }
+    .box-text { margin-top: 110px; gap: 22px; }
+    .title { font-size: 26px; }
+    .btn { min-width: 150px; font-size: 14px; padding: 6px 12px; }
+    .btn-hat { height: 28px; top: -9px; left: -11px; }
+    #countdownContainer { margin-top: 850px; }
 }
