@@ -1,19 +1,24 @@
-html {
-    scroll-behavior: smooth;
-    margin: 0;
-    overflow-x: hidden;
-    min-height: 100%;
-    background: linear-gradient(to bottom, rgb(0, 72, 149), rgb(75, 171, 226)) fixed;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+
+/* =========================================
+   ОСНОВА
+========================================= */
+
+* {
+    box-sizing: border-box;
 }
 
-@font-face {
-    font-family: 'zanesennyj';
-    src: url(/fonts/zanesennyj.woff) format('woff'),
-        url(/fonts/zanesennyj.woff2) format('woff2');
-    font-weight: normal;
-    font-style: normal;
+html {
+    scroll-behavior: smooth;
+    min-height: 100%;
+    overflow-x: hidden;
+
+    background: linear-gradient(
+        to bottom,
+        rgb(0, 72, 149),
+        rgb(75, 171, 226)
+    );
+
+    background-attachment: fixed;
 }
 
 body {
@@ -23,230 +28,977 @@ body {
     background: transparent;
 }
 
+@font-face {
+    font-family: 'zanesennyj';
+
+    src:
+        url('/fonts/zanesennyj.woff2') format('woff2'),
+        url('/fonts/zanesennyj.woff') format('woff');
+
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Блокировка прокрутки до нажатия */
+
+body.locked {
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+}
+
+body.unlocked {
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
 .container {
     position: relative;
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+
     width: 100%;
+    min-height: 100vh;
+
+    overflow: hidden;
 }
 
-canvas {
+
+/* =========================================
+   СНЕГОПАД
+========================================= */
+
+#canvas {
     position: fixed;
+
     top: 0;
     left: 0;
+
     width: 100%;
-    height: 100vh;
+    height: 100%;
+
     pointer-events: none;
     z-index: 100;
 }
 
-/* ================= Текст + кнопки ================= */
+
+/* =========================================
+   ГЛАВНЫЙ БЛОК
+========================================= */
+
 .box-text {
+    position: relative;
+    z-index: 5;
+
     width: 100%;
-    margin-top: 350px;
-    position: absolute;
+    min-height: 600px;
+
+    padding: 100px 20px 40px;
+
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    z-index: 5;
+
+    gap: 35px;
 }
 
-.btn-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+
+/* =========================================
+   ВОЛШЕБНЫЙ ЗАГОЛОВОК
+========================================= */
+
+.title-wrapper {
+    position: relative;
+
+    display: inline-flex;
+
     justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    align-items: center;
+
+    max-width: 100%;
+
+    padding: 20px 10px;
 }
 
 .title {
-    color: #f2f7f7d0;
-    font-family: 'zanesennyj';
-    font-size: 80px;
+    position: relative;
+    z-index: 2;
+
+    margin: 0;
+
+    font-family: 'zanesennyj', 'Caveat', cursive;
+
+    font-size: clamp(38px, 7vw, 85px);
+
+    line-height: 1.3;
+
     text-align: center;
-    overflow: hidden;
-    border-right: .15em solid #ae0034;
-    white-space: nowrap;
-    animation: typing 10s forwards;
-    width: 0;
+
+    color: #f5fcff;
+
+    opacity: 0;
+
+    animation:
+        magicalEntrance 2s cubic-bezier(.16, 1, .3, 1) .3s forwards,
+        titleGlow 4s ease-in-out 2.3s infinite;
+
+    text-shadow:
+        0 0 10px rgba(255,255,255,.8),
+        0 0 25px rgba(137,220,255,.7),
+        0 0 45px rgba(61,164,255,.5);
 }
-@keyframes typing {
-    from { width: 0 }
-    to { width: 40% }
+
+@keyframes magicalEntrance {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(70px)
+            scale(.7);
+
+        filter: blur(18px);
+
+        letter-spacing: 15px;
+    }
+
+    55% {
+        opacity: 1;
+
+        transform:
+            translateY(-12px)
+            scale(1.08);
+
+        filter: blur(2px);
+
+        letter-spacing: 2px;
+    }
+
+    75% {
+        transform:
+            translateY(5px)
+            scale(.97);
+
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+        filter: blur(0);
+
+        letter-spacing: normal;
+    }
+}
+
+@keyframes titleGlow {
+
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(255,255,255,.7),
+            0 0 25px rgba(137,220,255,.5),
+            0 0 45px rgba(61,164,255,.3);
+    }
+
+    50% {
+        text-shadow:
+            0 0 15px rgba(255,255,255,1),
+            0 0 35px rgba(137,220,255,.9),
+            0 0 65px rgba(61,164,255,.7);
+    }
+}
+
+
+/* =========================================
+   ГОЛУБОЕ СИЯНИЕ
+========================================= */
+
+.magic-glow {
+    position: absolute;
+
+    z-index: 1;
+
+    width: 80%;
+    height: 100%;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        ellipse,
+        rgba(119,208,255,.4),
+        rgba(73,155,255,.15) 45%,
+        transparent 75%
+    );
+
+    filter: blur(25px);
+
+    opacity: 0;
+
+    animation: glowAppear 2s ease .5s forwards;
+}
+
+@keyframes glowAppear {
+    to {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+
+/* =========================================
+   ИСКОРКИ
+========================================= */
+
+.title-sparkles {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.title-sparkles span {
+    position: absolute;
+
+    color: #fff;
+    font-size: 20px;
+
+    opacity: 0;
+
+    text-shadow:
+        0 0 8px white,
+        0 0 18px #75d5ff;
+
+    animation: sparkle 3s ease-in-out infinite;
+}
+
+.title-sparkles span:nth-child(1) {
+    top: 0;
+    left: 10%;
+    animation-delay: 1.5s;
+}
+
+.title-sparkles span:nth-child(2) {
+    top: 20%;
+    right: 5%;
+    animation-delay: 2s;
+}
+
+.title-sparkles span:nth-child(3) {
+    bottom: 0;
+    left: 25%;
+    animation-delay: 2.5s;
+}
+
+.title-sparkles span:nth-child(4) {
+    top: 0;
+    right: 25%;
+    animation-delay: 3s;
+}
+
+.title-sparkles span:nth-child(5) {
+    bottom: 15%;
+    right: 10%;
+    animation-delay: 3.5s;
+}
+
+.title-sparkles span:nth-child(6) {
+    top: 40%;
+    left: 0;
+    animation-delay: 4s;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(.3) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.3) rotate(90deg);
+    }
+}
+
+
+/* =========================================
+   КНОПКИ
+========================================= */
+
+.btn-group {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 25px;
+
+    width: 100%;
+
+    animation:
+        buttonsMagic 1.2s cubic-bezier(.16, 1, .3, 1) 1.8s both;
+}
+
+@keyframes buttonsMagic {
+    from {
+        opacity: 0;
+        transform: translateY(45px) scale(.9);
+        filter: blur(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
 }
 
 .btn {
-    font-family: "Caveat";
+    position: relative;
+
+    min-width: 220px;
+    min-height: 52px;
+
+    padding: 10px 25px;
+
     border: 1px solid transparent;
-    border-radius: 6px;
-    padding: 8px 16px;
-    min-width: 200px;
-    text-align: center;
+    border-radius: 8px;
+
+    font-family: 'Caveat', cursive;
+    font-size: 23px;
+    line-height: 1.2;
+
     color: #fff;
+
     background-image:
-        linear-gradient(to bottom, #f12828, #a00332, #9f0f31),
-        linear-gradient(to bottom, #ae0034, #6f094c);
+        linear-gradient(
+            to bottom,
+            #f12828,
+            #a00332,
+            #9f0f31
+        ),
+        linear-gradient(
+            to bottom,
+            #ae0034,
+            #6f094c
+        );
+
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
+
     box-shadow:
         inset 0 1px rgb(255 255 255 / .25),
         inset 0 -1px rgb(0 0 0 / .1),
         0 2px 4px rgb(0 0 0 / .25);
-    transition: 2s;
-    will-change: transform;
-    font-size: large;
+
     cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        filter .25s ease;
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn:active {
-    transform: scale(.92);
-    filter: brightness(.8);
+    transform: scale(.95);
+    filter: brightness(.85);
+}
+
+.btn:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 4px;
 }
 
 .btn-hat {
     position: absolute;
-    top: -15px;
-    left: -17px;
+
+    top: -17px;
+    left: -15px;
+
+    width: auto;
     height: 44px;
+
+    object-fit: contain;
+
     filter: drop-shadow(0 2px 1px rgb(0 0 0 / .25));
+
+    pointer-events: none;
 }
 
-.btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 0px 10px 2px #b80000;
+@media (hover: hover) {
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px 2px #b80000;
+    }
 }
 
-/* ================= Облака ================= */
+
+/* =========================================
+   ОБЛАКА
+========================================= */
+
 .cloud {
-    top: 10px;
     position: absolute;
-    background-image: url(/textyr/облака.webp);
+
+    background-image: url('/textyr/облака.webp');
+
     background-repeat: no-repeat;
-    background-size: cover;
-    opacity: 0.9;
+    background-size: contain;
+    background-position: center;
+
+    opacity: .9;
+
     width: 300px;
     height: 150px;
+
+    pointer-events: none;
+
+    animation: float 3s ease-in-out infinite;
 }
 
-#cloud1  { top: 20px;  left: 10%; }
-#cloud2  { top: 50px;  left: 30%; }
-#cloud3  { top: 40px;  left: 60%; }
-#cloud4  { top: 30px;  left: 80%; }
+#cloud1  { top: 20px; left: 10%; }
+#cloud2  { top: 50px; left: 30%; }
+#cloud3  { top: 40px; left: 60%; }
+#cloud4  { top: 30px; left: 80%; }
 #cloud5  { top: 110px; left: 50%; }
-#cloud6  { top: 290px; left: 0%;  }
+#cloud6  { top: 290px; left: 0%; }
 #cloud7  { top: 210px; left: 15%; }
 #cloud8  { top: 180px; left: 43%; }
 #cloud9  { top: 180px; left: 70%; }
 #cloud10 { top: 280px; left: 80%; }
 
-#cloud1_down  { width: 180px; height: 160px; top: 1000px; left: 10%; }
-#cloud2_down  { width: 200px; height: 210px; top: 1000px; left: 60%; }
-#cloud3_down  { width: 230px; height: 220px; top: 915px;  left: 75%; }
-#cloud4_down  { width: 180px; height: 160px; top: 1050px; left: 86%; }
-#cloud5_down  { width: 300px; height: 260px; top: 900px;  left: 30%; }
-#cloud6_down  { width: 180px; height: 160px; top: 1300px; left: 0%;  }
-#cloud7_down  { width: 250px; height: 260px; top: 1300px; left: 60%; }
-#cloud8_down  { width: 180px; height: 160px; top: 1300px; left: 80%; }
-#cloud9_down  { width: 220px; height: 210px; top: 1180px; left: 46%; }
-#cloud10_down { width: 280px; height: 290px; top: 1130px; left: 25%; }
+#cloud1_down {
+    width: 180px;
+    height: 160px;
+    top: 850px;
+    left: 10%;
+}
+
+#cloud2_down {
+    width: 200px;
+    height: 210px;
+    top: 850px;
+    left: 60%;
+}
+
+#cloud3_down {
+    width: 230px;
+    height: 220px;
+    top: 800px;
+    left: 75%;
+}
+
+#cloud4_down {
+    width: 180px;
+    height: 160px;
+    top: 900px;
+    left: 86%;
+}
+
+#cloud5_down {
+    width: 300px;
+    height: 260px;
+    top: 800px;
+    left: 30%;
+}
+
+#cloud6_down {
+    width: 180px;
+    height: 160px;
+    top: 1100px;
+    left: 0%;
+}
+
+#cloud7_down {
+    width: 250px;
+    height: 260px;
+    top: 1100px;
+    left: 60%;
+}
+
+#cloud8_down {
+    width: 180px;
+    height: 160px;
+    top: 1100px;
+    left: 80%;
+}
+
+#cloud9_down {
+    width: 220px;
+    height: 210px;
+    top: 1000px;
+    left: 46%;
+}
+
+#cloud10_down {
+    width: 280px;
+    height: 290px;
+    top: 950px;
+    left: 25%;
+}
 
 @keyframes float {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
-.cloud, .cloud_down {
-    animation: float 3s ease-in-out infinite;
-}
 
-/* ================= Счётчик ================= */
-#countdownContainer {
-    background: linear-gradient(to bottom, rgba(20, 114, 215, 0.035), rgba(137, 176, 219, 0.825), rgba(162, 193, 211, 0.806), rgba(109, 161, 216, 0.049));
+/* =========================================
+   ПРАЗДНИЧНОЕ ПРОСТРАНСТВО
+========================================= */
+
+.winter-space {
     position: relative;
-    margin-top: 1400px;
+
     width: 100%;
-    text-align: center;
+    height: 450px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    z-index: 2;
+}
+
+.winter-message {
     font-family: 'Caveat', cursive;
-    color: #b11818;
+
+    font-size: clamp(25px, 5vw, 42px);
+
+    color: rgba(255,255,255,.75);
+
+    text-shadow:
+        0 0 15px rgba(255,255,255,.6),
+        0 0 35px rgba(100,200,255,.5);
+
+    animation: winterMessage 4s ease-in-out infinite;
+}
+
+@keyframes winterMessage {
+    0%, 100% {
+        opacity: .55;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-15px);
+    }
+}
+
+.winter-decoration {
+    position: absolute;
+
+    color: white;
+    font-size: 30px;
+    opacity: .6;
+
+    animation: winterFloat 5s ease-in-out infinite;
+}
+
+.winter-decoration:nth-child(2) {
+    top: 15%;
+    left: 20%;
+}
+
+.winter-decoration:nth-child(3) {
+    top: 65%;
+    right: 20%;
+    animation-delay: 1s;
+}
+
+.winter-decoration:nth-child(4) {
+    top: 35%;
+    right: 35%;
+    animation-delay: 2s;
+}
+
+@keyframes winterFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-25px) rotate(30deg);
+    }
+}
+
+
+/* =========================================
+   СЧЁТЧИК
+========================================= */
+
+#countdownContainer {
+    position: relative;
+
     z-index: 5;
-    padding: 40px 0 60px;
-}
-#countdownContainer h1 {
-    letter-spacing: .150rem;
-    text-transform: uppercase;
-    margin-bottom: 0;
+
+    width: 100%;
+
+    margin-top: 100px;
+
+    padding: 55px 20px 70px;
+
     text-align: center;
+
+    font-family: 'Caveat', cursive;
+
+    color: #9e1010;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(20, 114, 215, 0),
+        rgba(75, 171, 226, .35),
+        rgba(75, 171, 226, 0)
+    );
+
+    scroll-margin-top: 30px;
 }
-#countdownContainer h1 span { position: relative; }
-#countdownContainer ul { margin: 0; padding: 0; }
-#countdownContainer li {
-    display: inline-block;
-    font-size: 4em;
-    list-style-type: none;
-    padding: 25px;
+
+#countdownContainer h2 {
+    margin: 0 0 35px;
+
+    font-size: clamp(30px, 5vw, 48px);
+
+    line-height: 1.3;
+
+    letter-spacing: 2px;
+
     text-transform: uppercase;
+
+    text-shadow: 0 2px 5px rgba(255,255,255,.4);
 }
+
+#countdownContainer h2 span {
+    position: relative;
+}
+
+#countdownContainer ul {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    margin: 0;
+    padding: 0;
+}
+
+#countdownContainer li {
+    min-width: 120px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 10px;
+
+    list-style: none;
+
+    font-size: 27px;
+    font-weight: bold;
+
+    color: #a30d24;
+}
+
 #countdownContainer li span {
     display: block;
-    font-size: 5rem;
+
+    font-size: clamp(55px, 8vw, 85px);
+
+    line-height: 1.1;
+
+    font-weight: bold;
+
+    font-variant-numeric: tabular-nums;
 }
 
-.stet { font-size: 1.5rem; }
 
-/* ===================================================== */
-/* ================= АДАПТАЦИЯ ========================= */
-/* ===================================================== */
+/* =========================================
+   НИЖНИЙ ПРАЗДНИЧНЫЙ БЛОК
+========================================= */
+
+.winter-footer {
+    position: relative;
+
+    z-index: 5;
+
+    width: 100%;
+
+    padding: 65px 20px 85px;
+
+    text-align: center;
+
+    font-family: 'Caveat', cursive;
+
+    color: rgba(255,255,255,.85);
+
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(0,50,120,.25)
+    );
+}
+
+.winter-footer p {
+    font-size: clamp(24px, 4vw, 36px);
+    margin: 15px 0;
+}
+
+.winter-footer span {
+    font-size: 22px;
+}
+
+.footer-snow {
+    font-size: 30px;
+
+    letter-spacing: 15px;
+
+    color: white;
+
+    text-shadow: 0 0 15px white;
+
+    animation: footerGlow 3s ease-in-out infinite;
+}
+
+@keyframes footerGlow {
+    0%, 100% {
+        opacity: .5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================
+   ПЛАНШЕТЫ
+========================================= */
 
 @media (max-width: 1024px) {
-    .box-text { margin-top: 250px; }
-    .title { font-size: 64px; }
-    .btn { min-width: 180px; font-size: 16px; }
+
+    .box-text {
+        min-height: 550px;
+        padding-top: 90px;
+    }
+
+    .cloud {
+        width: 220px;
+        height: 120px;
+    }
+
 }
 
+
+/* =========================================
+   ТЕЛЕФОНЫ
+========================================= */
+
 @media (max-width: 768px) {
+
     .box-text {
-        flex-direction: column;
-        margin-top: 140px;
-        gap: 30px;
-        padding: 0 16px;
+        min-height: 520px;
+
+        padding: 90px 18px 35px;
+
+        gap: 35px;
+    }
+
+    .title-wrapper {
+        padding: 15px 5px;
     }
 
     .title {
-        font-size: clamp(28px, 8vw, 42px);
-        width: auto;
-        max-width: 0;
-        animation: typing-mobile 10s forwards;
-        border-right: .15em solid #ae0034;
-        overflow: hidden;
-        white-space: nowrap;
-        text-align: center;
+        font-size: clamp(32px, 9vw, 52px);
     }
 
-    @keyframes typing-mobile {
-        from { max-width: 0 }
-        to   { max-width: 100% }
+    .title-sparkles span {
+        font-size: 15px;
     }
 
-    .btn-group { gap: 15px; width: 100%; }
-    .btn { min-width: 170px; max-width: 230px; font-size: 15px; padding: 7px 14px; }
-    .btn-hat { height: 34px; top: -11px; left: -13px; }
+    .btn-group {
+        flex-direction: column;
+        gap: 22px;
+    }
 
-    #countdownContainer { margin-top: 1000px; padding: 20px 0 30px; }
-    #countdownContainer h1 { font-size: 15px; letter-spacing: 1px; }
-    #countdownContainer li { font-size: 13px; padding: 8px 10px; }
-    #countdownContainer li span { font-size: 30px; }
+    .btn {
+        width: min(100%, 290px);
+
+        min-width: 0;
+        min-height: 55px;
+
+        padding: 12px 18px;
+
+        font-size: 22px;
+    }
+
+    .btn-hat {
+        height: 36px;
+
+        top: -13px;
+        left: -12px;
+    }
+
+    .cloud {
+        width: 150px;
+        height: 90px;
+        opacity: .75;
+    }
+
+    .winter-space {
+        height: 300px;
+    }
+
+    .winter-decoration {
+        font-size: 22px;
+    }
+
+    #countdownContainer {
+        margin-top: 40px;
+        padding: 35px 10px 45px;
+    }
+
+    #countdownContainer h2 {
+        font-size: clamp(25px, 6vw, 34px);
+        margin-bottom: 25px;
+        letter-spacing: 1px;
+    }
+
+    #countdownContainer ul {
+        gap: 8px;
+    }
+
+    #countdownContainer li {
+        min-width: 70px;
+        padding: 5px;
+        font-size: 19px;
+    }
+
+    #countdownContainer li span {
+        font-size: clamp(42px, 11vw, 55px);
+    }
+
+    .winter-footer {
+        padding: 45px 15px 65px;
+    }
+
+    .winter-footer p {
+        font-size: 25px;
+    }
+
+    .winter-footer span {
+        font-size: 19px;
+    }
+
+    .footer-snow {
+        font-size: 22px;
+        letter-spacing: 8px;
+    }
+
 }
 
+
+/* =========================================
+   МАЛЕНЬКИЕ ТЕЛЕФОНЫ
+========================================= */
+
 @media (max-width: 380px) {
-    .box-text { margin-top: 110px; gap: 22px; }
-    .title { font-size: 26px; }
-    .btn { min-width: 150px; font-size: 14px; padding: 6px 12px; }
-    .btn-hat { height: 28px; top: -9px; left: -11px; }
-    #countdownContainer { margin-top: 850px; }
+
+    .box-text {
+        min-height: 490px;
+        padding: 85px 12px 30px;
+        gap: 28px;
+    }
+
+    .title {
+        font-size: clamp(29px, 9vw, 36px);
+    }
+
+    .btn {
+        width: min(100%, 260px);
+        font-size: 20px;
+    }
+
+    #countdownContainer {
+        margin-top: 25px;
+        padding: 25px 5px 35px;
+    }
+
+    #countdownContainer li {
+        min-width: 62px;
+        font-size: 16px;
+    }
+
+    #countdownContainer li span {
+        font-size: 38px;
+    }
+
+}
+
+
+/* =========================================
+   БОЛЬШИЕ МОНИТОРЫ
+========================================= */
+
+@media (min-width: 1440px) {
+
+    .box-text {
+        min-height: 650px;
+    }
+
+}
+
+
+/* =========================================
+   УМЕНЬШЕНИЕ АНИМАЦИЙ
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .title,
+    .magic-glow,
+    .title-sparkles span,
+    .btn-group,
+    .cloud,
+    .winter-message,
+    .winter-decoration,
+    .footer-snow {
+        animation: none !important;
+        opacity: 1;
+        filter: none;
+    }
+
+    .title {
+        transform: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
 }
