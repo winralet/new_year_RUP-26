@@ -91,3 +91,42 @@ function createRandomCircle() {
 function getRandomNumber(min, max) {
     return Math.round(Math.random() * (max - min) + min);
 }
+
+
+function createRandomCircle() {
+    const circle = document.createElement('img');
+
+    const { width, height } = board.getBoundingClientRect();
+
+    // На телефоне снежки крупнее — иначе в них сложно попасть пальцем
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    const minSize = isMobile ? Math.max(44, width * 0.14) : Math.max(30, width * 0.06);
+    const maxSize = isMobile ? Math.max(64, width * 0.20) : Math.max(60, width * 0.12);
+
+    const size = Math.round(getRandomNumber(minSize, maxSize));
+    const x = getRandomNumber(0, width - size);
+    const y = getRandomNumber(0, height - size);
+
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+
+    circle.src = randomImage;
+    circle.style.width = `${size}px`;
+    circle.style.height = `${size}px`;
+    circle.style.position = 'absolute';
+    circle.style.top = `${y}px`;
+    circle.style.left = `${x}px`;
+    circle.classList.add('circle');
+
+    board.append(circle);
+}
+
+
+board.addEventListener('pointerdown', event => {
+    const target = event.target.closest('.circle');
+    if (target) {
+        score++;
+        target.remove();
+        createRandomCircle();
+    }
+});
