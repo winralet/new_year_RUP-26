@@ -1,111 +1,381 @@
-(function() {
-    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame ||
-    function(callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-    window.requestAnimationFrame = requestAnimationFrame;
-})();
 
-var flakes = [],
-    canvas = document.getElementById("canvas"),
-    ctx = canvas.getContext("2d"),
-    flakeCount = 200;
+/* =========================================
+   НАСТРОЙКИ
+========================================= */
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas?.getContext('2d');
+
+let flakes = [];
+let animationId = null;
+
+const isMobile = window.matchMedia('(max-width: 768px)');
+
+const reducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+);
+
+
+/* =========================================
+   СНЕГОПАД
+========================================= */
+
+function getFlakeCount() {
+
+    if (reducedMotion.matches) {
+        return 0;
+    }
+
+    return isMobile.matches ? 65 : 180;
+
+}
+
+
+function createFlake() {
+
+    return {
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+
+        size: Math.random() * 2.5 + 1,
+
+        speed: Math.random() * 1 + 0.5,
+
+        opacity: Math.random() * 0.5 + 0.3,
+
+        drift: Math.random() * 0.5 - 0.25
+    };
+
+}
+
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+    if (!canvas || !ctx) return;
+
+    const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        2
+    );
+
+    canvas.width = Math.floor(
+        window.innerWidth * dpr
+    );
+
+    canvas.height = Math.floor(
+        window.innerHeight * dpr
+    );
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    initSnow();
+
 }
-resizeCanvas();
+
+
+function initSnow() {
+
+    flakes = [];
+
+    for (let i = 0; i < getFlakeCount(); i++) {
+
+        flakes.push(createFlake());
+
+    }
+
+}
+
 
 function snow() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (var i = 0; i < flakeCount; i++) {
-        var flake = flakes[i];
-        flake.y += flake.velY;
+    if (!canvas || !ctx || reducedMotion.matches) {
+        return;
+    }
 
-        if (flake.y >= canvas.height) {
-            reset(flake);
+    ctx.clearRect(
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    for (const flake of flakes) {
+
+        flake.y += flake.speed;
+        flake.x += flake.drift;
+
+        if (flake.y > window.innerHeight) {
+
+            flake.y = -5;
+
+            flake.x = Math.random() * window.innerWidth;
+
+        }
+
+        if (flake.x > window.innerWidth) {
+            flake.x = 0;
+        }
+
+        if (flake.x < 0) {
+            flake.x = window.innerWidth;
         }
 
         ctx.beginPath();
-        ctx.arc(flake.x, flake.y, flake.size, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255," + flake.opacity + ")";
+
+        ctx.arc(
+            flake.x,
+            flake.y,
+            flake.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle =
+            `rgba(255,255,255,${flake.opacity})`;
+
         ctx.fill();
+
     }
-    requestAnimationFrame(snow);
+
+    animationId = requestAnimationFrame(snow);
+
 }
 
-function reset(flake) {
-    flake.x = Math.floor(Math.random() * canvas.width);
-    flake.y = 0;
-    flake.size = (Math.random() * 3) + 2;
-    flake.speed = (Math.random() * 1) + 0.5;
-    flake.velY = flake.speed;
-    flake.opacity = (Math.random() * 0.5) + 0.3;
-}
 
-function init() {
-    flakes = [];
-    for (var i = 0; i < flakeCount; i++) {
-        var x = Math.floor(Math.random() * canvas.width),
-            y = Math.floor(Math.random() * canvas.height),
-            size = (Math.random() * 3) + 2,
-            speed = (Math.random() * 1) + 0.5,
-            opacity = (Math.random() * 0.5) + 0.3;
+function startSnow() {
 
-        flakes.push({
-            speed: speed, velY: speed,
-            x: x, y: y,
-            size: size, opacity: opacity
-        });
+    if (animationId !== null) {
+
+        cancelAnimationFrame(animationId);
+
+        animationId = null;
+
     }
-    snow();
+
+    if (reducedMotion.matches) {
+
+        ctx?.clearRect(
+            0,
+            0,
+            window.innerWidth,
+            window.innerHeight
+        );
+
+        return;
+
+    }
+
+    animationId = requestAnimationFrame(snow);
+
 }
 
-window.addEventListener("resize", function() {
-    resizeCanvas();
-});
 
-init();
+function updateSnow() {
+
+    initSnow();
+    startSnow();
+
+}
+
+
+window.addEventListener('resize', resizeCanvas);
+
+isMobile.addEventListener('change', updateSnow);
+
+reducedMotion.addEventListener('change', updateSnow);
+
+resizeCanvas();
+startSnow();
+
+
+/* =========================================
+   УПРАВЛЕНИЕ ПРОКРУТКОЙ
+========================================= */
 
 const scrollButton = document.getElementById('scroll-btn');
-if (scrollButton) {
-    scrollButton.addEventListener('click', () => {
-        const target = document.getElementById('countdownContainer');
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        if (typeof createGoldCircles === 'function') {
-            setTimeout(createGoldCircles, 400);
-        }
-    });
+
+const countdownContainer = document.getElementById(
+    'countdownContainer'
+);
+
+let pageUnlocked = false;
+
+
+/* Разблокировка страницы */
+
+function unlockPage() {
+
+    if (pageUnlocked) return;
+
+    pageUnlocked = true;
+
+    document.body.classList.remove('locked');
+
+    document.body.classList.add('unlocked');
+
 }
 
-let christmasStart = new Date('2027/01/01 00:00:00');
+
+/* Переход к таймеру */
+
+if (scrollButton && countdownContainer) {
+
+    scrollButton.addEventListener('click', () => {
+
+        if (!pageUnlocked) {
+
+            unlockPage();
+
+        }
+
+        countdownContainer.scrollIntoView({
+
+            behavior: reducedMotion.matches
+                ? 'auto'
+                : 'smooth',
+
+            block: 'center'
+
+        });
+
+        if (typeof createGoldCircles === 'function') {
+
+            setTimeout(createGoldCircles, 400);
+
+        }
+
+    });
+
+}
+
+
+/* =========================================
+   ОБРАТНЫЙ ОТСЧЁТ
+========================================= */
+
+/* 1 января 2027 года, 00:00 */
+
+const christmasStart = new Date(
+    2027,
+    0,
+    1,
+    0,
+    0,
+    0
+).getTime();
+
 let countdownInterval = null;
 
-function getTimeRemaining(deadline) {
-    const total = Date.parse(deadline) - Date.parse(new Date());
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(total / (1000 * 60 * 60 * 24));
-    return { total, days, hours, minutes, seconds };
+
+/* Получение времени */
+
+function getTimeRemaining() {
+
+    const total = Math.max(
+        0,
+        christmasStart - Date.now()
+    );
+
+    return {
+
+        total,
+
+        days: Math.floor(
+            total / (1000 * 60 * 60 * 24)
+        ),
+
+        hours: Math.floor(
+            (total / (1000 * 60 * 60)) % 24
+        ),
+
+        minutes: Math.floor(
+            (total / (1000 * 60)) % 60
+        ),
+
+        seconds: Math.floor(
+            (total / 1000) % 60
+        )
+
+    };
+
 }
+
+
+/* Обновление таймера */
+
+function updateCountdown() {
+
+    const time = getTimeRemaining();
+
+    const elements = {
+
+        days: document.getElementById('days'),
+
+        hours: document.getElementById('hours'),
+
+        minutes: document.getElementById('minutes'),
+
+        seconds: document.getElementById('seconds')
+
+    };
+
+    for (const [key, element] of Object.entries(elements)) {
+
+        if (element) {
+
+            element.textContent = time[key];
+
+        }
+
+    }
+
+    if (time.total <= 0) {
+
+        stopTimer();
+
+    }
+
+}
+
+
+/* Запуск */
 
 function startTimer() {
-    window.clearInterval(countdownInterval);
-    countdownInterval = window.setInterval(() => {
-        const time = getTimeRemaining(christmasStart);
-        document.getElementById('days').innerText = time.days;
-        document.getElementById('hours').innerText = time.hours;
-        document.getElementById('minutes').innerText = time.minutes;
-        document.getElementById('seconds').innerText = time.seconds;
-    }, 200);
+
+    stopTimer();
+
+    updateCountdown();
+
+    countdownInterval = setInterval(
+        updateCountdown,
+        1000
+    );
+
 }
-startTimer();
+
+
+/* Остановка */
 
 function stopTimer() {
-    window.clearInterval(countdownInterval);
+
+    if (countdownInterval !== null) {
+
+        clearInterval(countdownInterval);
+
+        countdownInterval = null;
+
+    }
+
 }
+
+
+/* Запуск таймера */
+
+startTimer();
