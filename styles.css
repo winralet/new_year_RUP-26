@@ -10,14 +10,13 @@ html {
         url(/fonts/zanesennyj.woff2) format('woff2');
     font-weight: normal;
     font-style: normal;
-  }
+}
 
 body {
     margin: 0;
     height: 2000px;
-    background: linear-gradient(to bottom, rgb(0, 72, 149), rgb(75, 171, 226)); /* Градиент от светлого к темному */
-    
-}   
+    background: linear-gradient(to bottom, rgb(0, 72, 149), rgb(75, 171, 226));
+}
 
 .container {
     flex: 1;
@@ -31,76 +30,86 @@ canvas {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%; 
-    height: 100vh; 
-    pointer-events: none; 
-    z-index: 0; 
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
 }
 
+/* ================= Текст + кнопки ================= */
 .box-text {
     width: 100vw;
     margin-top: 350px;
     position: absolute;
     display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 20px; 
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 5; /* чтобы текст был поверх облаков */
+    box-sizing: border-box;
 }
 
- .title {
-    width: 100vw;
-    color: #f2f7f7d0; 
-    font-family:'zanesennyj';
+/* Новая обёртка для двух кнопок */
+.btn-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.title {
+    color: #f2f7f7d0;
+    font-family: 'zanesennyj';
     font-size: 80px;
     text-align: center;
     overflow: hidden;
     border-right: .15em solid #ae0034;
     white-space: nowrap;
-    animation: 
-      typing 10s forwards;
+    animation: typing 10s forwards;
     width: 0;
-  }
-  @keyframes typing {
+}
+@keyframes typing {
     from { width: 0 }
     to { width: 40% }
-  }
-
+}
 
 .btn {
     font-family: "Caveat";
-	border: 1px solid transparent;
-	border-radius: 6px;
-	padding: 8px 16px;
-	min-width: 200px;
-	text-align: center;
-	color: #fff;
-	background-image:
-		linear-gradient(to bottom, #f12828, #a00332, #9f0f31),
-		linear-gradient(to bottom, #ae0034, #6f094c);
-	background-clip: padding-box, border-box;
-	background-origin: padding-box, border-box;
-	box-shadow:
-		inset 0 1px rgb(255 255 255 / .25),
-		inset 0 -1px rgb(0 0 0 / .1),
-		0 2px 4px rgb(0 0 0 / .25);
-	transition: 2s;
-	will-change: transform;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 8px 16px;
+    min-width: 200px;
+    text-align: center;
+    color: #fff;
+    background-image:
+        linear-gradient(to bottom, #f12828, #a00332, #9f0f31),
+        linear-gradient(to bottom, #ae0034, #6f094c);
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    box-shadow:
+        inset 0 1px rgb(255 255 255 / .25),
+        inset 0 -1px rgb(0 0 0 / .1),
+        0 2px 4px rgb(0 0 0 / .25);
+    transition: 2s;
+    will-change: transform;
     font-size: large;
     cursor: pointer;
 }
 
 .btn:active {
-	transform: scale(.92);
-	filter: brightness(.8);
+    transform: scale(.92);
+    filter: brightness(.8);
 }
 
 .btn-hat {
-	position: absolute;
-	top: -15px;
-	left: -17px;
-	height: 44px;
-	filter: drop-shadow(0 2px 1px rgb(0 0 0 / .25));
+    position: absolute;
+    top: -15px;
+    left: -17px;
+    height: 44px;
+    filter: drop-shadow(0 2px 1px rgb(0 0 0 / .25));
 }
 
 .btn:hover {
@@ -108,147 +117,43 @@ canvas {
     box-shadow: 0px 0px 10px 2px #b80000;
 }
 
-
-
-
+/* ================= Облака ================= */
 .cloud {
-    top:10px;
+    top: 10px;
     position: absolute;
     background-image: url(/textyr/облака.webp);
     background-repeat: no-repeat;
     background-size: cover;
-    opacity:0.9; /* Прозрачность облака */
+    opacity: 0.9;
     width: 300px;
     height: 150px;
 }
 
-#cloud1 {
-    top: 20px;
-    left: 10%;
-}
+#cloud1  { top: 20px;  left: 10%; }
+#cloud2  { top: 50px;  left: 30%; }
+#cloud3  { top: 40px;  left: 60%; }
+#cloud4  { top: 30px;  left: 80%; }
+#cloud5  { top: 110px; left: 50%; }
+#cloud6  { top: 290px; left: 0%;  }
+#cloud7  { top: 210px; left: 15%; }
+#cloud8  { top: 180px; left: 43%; }
+#cloud9  { top: 180px; left: 70%; }
+#cloud10 { top: 280px; left: 80%; }
 
-#cloud2 {
-    top: 50px;
-    left: 30%;
-}
+#cloud1_down  { width: 180px; height: 160px; top: 1000px; left: 10%; }
+#cloud2_down  { width: 200px; height: 210px; top: 1000px; left: 60%; }
+#cloud3_down  { width: 230px; height: 220px; top: 915px;  left: 75%; }
+#cloud4_down  { width: 180px; height: 160px; top: 1050px; left: 86%; }
+#cloud5_down  { width: 300px; height: 260px; top: 900px;  left: 30%; }
+#cloud6_down  { width: 180px; height: 160px; top: 1300px; left: 0%;  }
+#cloud7_down  { width: 250px; height: 260px; top: 1300px; left: 60%; }
+#cloud8_down  { width: 180px; height: 160px; top: 1300px; left: 80%; }
+#cloud9_down  { width: 220px; height: 210px; top: 1180px; left: 46%; }
+#cloud10_down { width: 280px; height: 290px; top: 1130px; left: 25%; }
 
-#cloud3 {
-    top: 40px;
-    left: 60%;
-}
-
-#cloud4 {
-    top: 30px;
-    left: 80%;
-}
-
-#cloud5 {
-    top: 110px;
-    left: 50%;
-}
-
-#cloud6 {
-    top: 290px;
-    left: 0%;
-}
-
-#cloud7 {
-    top: 210px;
-    left: 15%;
-}
-
-#cloud8 {
-    top: 180px;
-    left: 43%;
-}
-
-#cloud9 {
-    top: 180px;
-    left: 70%;
-}
-
-#cloud10 {
-    top: 280px;
-    left: 80%;
-}
-
-
-
-#cloud1_down {
-    width: 180px;
-    height: 160px;
-    top: 1000px;
-    left: 10%;
-}
-
-#cloud2_down {
-    width: 200px;
-    height: 210px;
-    top: 1000px;
-    left: 60%;
-}
-
-#cloud3_down {
-    width: 230px;
-    height: 220px;
-    top: 915px;
-    left:75%;
-}
-
-#cloud4_down {
-    width: 180px;
-    height: 160px;
-    top: 1050px;
-    left: 86%;
-}
-
-#cloud5_down {
-    width: 300px;
-    height: 260px;
-    top: 900px;
-    left: 30%;
-}
-
-#cloud6_down {
-    width: 180px;
-    height: 160px;
-    top: 1300px;
-    left: 0%;
-}
-
-#cloud7_down {
-    width: 250px;
-    height: 260px;
-    top: 1300px;
-    left: 60%;
-}
-
-#cloud8_down {
-    width: 180px;
-    height: 160px;
-    top: 1300px;
-    left: 80%;
-}   
-
-#cloud9_down {
-    width: 220px;
-    height: 210px;
-    top: 1180px;
-    left: 46%;
-}   
-
-#cloud10_down { 
-    width: 280px;
-    height: 290px;
-    top: 1130px;
-    left: 25%;
-}
-
-
-/* Анимация облаков */
 @keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-10px); }
     100% { transform: translateY(0); }
 }
 
@@ -256,7 +161,7 @@ canvas {
     animation: float 3s ease-in-out infinite;
 }
 
-
+/* ================= Счётчик ================= */
 #countdownContainer {
     background: linear-gradient(to bottom, rgba(20, 114, 215, 0.035), rgba(137, 176, 219, 0.825), rgba(162, 193, 211, 0.806), rgba(109, 161, 216, 0.049));
     position: absolute;
@@ -265,31 +170,179 @@ canvas {
     text-align: center;
     font-family: 'Caveat', cursive;
     color: #b11818;
-    h1 {
-      letter-spacing: .150rem;
-      text-transform: uppercase;
-      margin-bottom: 0;
-      text-align: center;
-      span {
-        position: relative;
-      }
-    }
-    ul {
-      margin: 0;
-    }
-    li {
-      display: inline-block;
-      font-size: 3em;
-      list-style-type: none;
-      padding: 25px;
-      text-transform: uppercase;
-    }
-    li span {
-      display: block;
-      font-size: 5rem;
-    }
-  }
+    z-index: 5;
+    box-sizing: border-box;
+}
+#countdownContainer h1 {
+    letter-spacing: .150rem;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    text-align: center;
+}
+#countdownContainer h1 span { position: relative; }
+#countdownContainer ul { margin: 0; padding: 0; }
+#countdownContainer li {
+    display: inline-block;
+    font-size: 3em;
+    list-style-type: none;
+    padding: 25px;
+    text-transform: uppercase;
+}
+#countdownContainer li span {
+    display: block;
+    font-size: 5rem;
+}
 
-.stet{
-	font-size:1.5rem;
+.stet { font-size: 1.5rem; }
+
+/* ===================================================== */
+/* ================= АДАПТАЦИЯ ========================= */
+/* ===================================================== */
+
+/* Планшеты и небольшие ноутбуки */
+@media (max-width: 1024px) {
+    .box-text {
+        flex-direction: column;   /* заголовок сверху, кнопки снизу */
+        margin-top: 220px;
+        gap: 30px;
+        padding: 0 20px;
+    }
+
+    .title {
+        width: 100%;
+        max-width: 100%;
+        white-space: normal;
+        overflow: visible;
+        border-right: none;
+        font-size: clamp(40px, 7vw, 64px);
+        line-height: 1.15;
+        opacity: 0;
+        animation: fadeInTitle 1s ease forwards;
+    }
+
+    @keyframes fadeInTitle {
+        from { opacity: 0; transform: translateY(-16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn {
+        min-width: 200px;
+    }
+
+    #countdownContainer { top: 1350px; }
+}
+
+/* Телефоны (портрет) */
+@media (max-width: 768px) {
+    body { height: 1400px; }
+
+    .box-text {
+        margin-top: 110px;
+        gap: 20px;
+        padding: 0 16px;
+    }
+
+    .title {
+        font-size: clamp(28px, 9vw, 44px);
+    }
+
+    .btn-group {
+        gap: 16px;
+    }
+
+    .btn {
+        flex: 1 1 150px;
+        min-width: 0;
+        max-width: 240px;
+        font-size: 15px;
+        padding: 10px 14px;
+        box-sizing: border-box;
+    }
+
+    .btn-hat {
+        height: 30px;
+        top: -10px;
+        left: -10px;
+    }
+
+    /* Верхние облака — меньше, чтобы не заслоняли текст */
+    .cloud {
+        width: 140px;
+        height: 70px;
+        opacity: 0.75;
+    }
+
+    /* Нижние облака — подгоняем под компактную высоту */
+    #cloud1_down  { width: 110px; height: 90px;  top: 640px; left: 5%;  }
+    #cloud2_down  { width: 120px; height: 130px; top: 640px; left: 55%; }
+    #cloud3_down  { width: 140px; height: 130px; top: 560px; left: 70%; }
+    #cloud4_down  { width: 110px; height: 90px;  top: 700px; left: 78%; }
+    #cloud5_down  { width: 180px; height: 150px; top: 560px; left: 20%; }
+    #cloud6_down  { width: 110px; height: 90px;  top: 850px; left: 0%;  }
+    #cloud7_down  { width: 150px; height: 150px; top: 830px; left: 55%; }
+    #cloud8_down  { width: 110px; height: 90px;  top: 900px; left: 75%; }
+    #cloud9_down  { width: 130px; height: 120px; top: 760px; left: 38%; }
+    #cloud10_down { width: 160px; height: 170px; top: 730px; left: 15%; }
+
+    /* Счётчик */
+    #countdownContainer {
+        top: 1000px;
+    }
+
+    #countdownContainer h1 {
+        font-size: 15px;
+        letter-spacing: 1px;
+        padding: 0 12px;
+        line-height: 1.4;
+    }
+
+    #countdownContainer ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #countdownContainer li {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    #countdownContainer li span {
+        font-size: 30px;
+        line-height: 1.2;
+    }
+}
+
+/* Очень узкие телефоны */
+@media (max-width: 380px) {
+    .box-text {
+        margin-top: 90px;
+        gap: 16px;
+    }
+
+    .title {
+        font-size: 30px;
+    }
+
+    .btn-group {
+        flex-direction: column;   /* кнопки в столбик */
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .btn {
+        max-width: none;
+        width: 100%;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    #countdownContainer li span {
+        font-size: 26px;
+    }
+
+    #countdownContainer li {
+        font-size: 12px;
+        padding: 6px;
+    }
 }
