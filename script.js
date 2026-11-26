@@ -9,17 +9,19 @@
 var flakes = [],
     canvas = document.getElementById("canvas"),
     ctx = canvas.getContext("2d"),
-    flakeCount = 1000;
+    flakeCount = 200;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
 
 function snow() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (var i = 0; i < flakeCount; i++) {
         var flake = flakes[i];
-
         flake.y += flake.velY;
 
         if (flake.y >= canvas.height) {
@@ -44,6 +46,7 @@ function reset(flake) {
 }
 
 function init() {
+    flakes = [];
     for (var i = 0; i < flakeCount; i++) {
         var x = Math.floor(Math.random() * canvas.width),
             y = Math.floor(Math.random() * canvas.height),
@@ -52,25 +55,19 @@ function init() {
             opacity = (Math.random() * 0.5) + 0.3;
 
         flakes.push({
-            speed: speed,
-            velY: speed,
-            x: x,
-            y: y,
-            size: size,
-            opacity: opacity
+            speed: speed, velY: speed,
+            x: x, y: y,
+            size: size, opacity: opacity
         });
     }
-
     snow();
-};
+}
 
 window.addEventListener("resize", function() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    resizeCanvas();
 });
 
 init();
-
 
 const scrollButton = document.getElementById('scroll-btn');
 if (scrollButton) {
@@ -86,9 +83,7 @@ if (scrollButton) {
 }
 
 let christmasStart = new Date('2027/01/01 00:00:00');
-
 let countdownInterval = null;
-let countdownTimeout = null;
 
 function getTimeRemaining(deadline) {
     const total = Date.parse(deadline) - Date.parse(new Date());
@@ -96,14 +91,7 @@ function getTimeRemaining(deadline) {
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
     const days = Math.floor(total / (1000 * 60 * 60 * 24));
-
-    return {
-        total,
-        days,
-        hours,
-        minutes,
-        seconds
-    };
+    return { total, days, hours, minutes, seconds };
 }
 
 function startTimer() {
@@ -114,7 +102,7 @@ function startTimer() {
         document.getElementById('hours').innerText = time.hours;
         document.getElementById('minutes').innerText = time.minutes;
         document.getElementById('seconds').innerText = time.seconds;
-    }, 200)
+    }, 200);
 }
 startTimer();
 
