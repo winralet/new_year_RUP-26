@@ -3,111 +3,204 @@
   font-family: "Caveat";
 }
 
-
 @font-face {
   font-family: 'zanesennyj';
   src: url(/fonts/zanesennyj.woff) format('woff'),
-      url(/fonts/zanesennyj.woff2) format('woff2');
+       url(/fonts/zanesennyj.woff2) format('woff2');
   font-weight: normal;
   font-style: normal;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 body {
   color: #f2f7f7d0;
   height: 100vh;
+  height: 100dvh;            /* корректная высота на мобильных */
   overflow: hidden;
-  margin: 0;
   text-align: center;
-}
-
-#time {
-  font-size: 3rem; /* Увеличиваем размер шрифта для лучшей видимости */
-  color: #f2f7f7d0; /* Цвет текста таймера */
+  overscroll-behavior: none; /* отключаем pull-to-refresh */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 a {
-  color:#f2f7f7d0;
+  color: #f2f7f7d0;
   text-decoration: none;
 }
 
-a:hover {
-  color: #2779a7;
-  transition: all 0.275s ease-in;
+a:hover { color: #2779a7; transition: all .275s ease-in; }
+
+/* Заголовки — резиновый размер */
+h1 {
+  line-height: 1.3;
+  font-size: clamp(1.6rem, 6vw, 4rem);
+  padding: 0 16px;
+  margin: 8px 0;
+}
+
+h3 {
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+  margin: 8px 0;
+  padding: 0 12px;
 }
 
 .start {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  padding: 10px 20px;
+  display: inline-block;
 }
 
-h1 {
-  line-height: 1.4;
-  font-size: 4rem;
+#time {
+  font-size: clamp(1.4rem, 5vw, 3rem);
+  color: #f2f7f7d0;
 }
 
+/* Экраны — на всю высоту с учётом адресной строки мобильных */
 .screen {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
-  transition: margin 0.5s ease-out;
+  padding: 16px;
+  transition: margin .5s ease-out;
 }
 
 .screen.up {
   margin-top: -100vh;
+  margin-top: -100dvh;
 }
 
+/* Кнопки времени */
 .time-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   list-style: none;
   padding: 0;
+  margin: 8px 0;
+  gap: 8px;
 }
 
-.time-list li {
-  margin: 10px;
-}
+.time-list li { margin: 4px; }
 
 .time-btn {
   background-color: transparent;
   border: 2px solid #f2f7f7d0;
   color: #f2f7f7d0;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  font-size: 1.5rem;
+  padding: .6rem 1.2rem;
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+  min-width: 80px;
+  min-height: 44px;         /* палец попадает */
+  border-radius: 8px;
+  transition: all .275s ease-in;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.time-btn:hover {
-  border: 2px solid;
-  color: #2779a7;
-  transition: all 0.275s ease-in;
-}
-
-.hide {
-  opacity: 0;
-}
-
-.primary {
+.time-btn:hover,
+.time-btn:focus {
+  border-color: #2779a7;
   color: #2779a7;
 }
 
+.hide { opacity: 0; }
+.primary { color: #2779a7; }
+
+/* Игровое поле — квадрат, вписанный и в ширину, и в высоту */
 .board {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 500px;
-  height: 500px;
-  background:url(textyr/images.jpg);
+  width: min(92vw, 72vh, 500px);
+  height: min(92vw, 72vh, 500px);
+  background: url(textyr/images.jpg) center/cover no-repeat;
   border-radius: 30px;
   overflow: hidden;
+  touch-action: manipulation;
 }
 
+/* Прогрессивное улучшение под dvh (реальная высота экрана) */
+@supports (height: 100dvh) {
+  .board {
+    width: min(92vw, 72dvh, 500px);
+    height: min(92vw, 72dvh, 500px);
+  }
+}
+
+/* Снежок */
 .circle {
   position: absolute;
   border-radius: 50%;
   cursor: pointer;
   color: #f0efbfad;
+  object-fit: contain;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Планшеты */
+@media (max-width: 1024px) {
+  .board { border-radius: 24px; }
+}
+
+/* Телефоны портрет */
+@media (max-width: 768px) {
+  h1 { font-size: clamp(1.4rem, 5.5vw, 2rem); }
+  h3 { font-size: 1rem; }
+  #time { font-size: 1.6rem; }
+  .board { border-radius: 20px; }
+  .time-btn {
+    min-width: 90px;
+    padding: .65rem 1rem;
+  }
+}
+
+/* Ландшафт телефона (мало высоты) */
+@media (max-height: 500px) and (orientation: landscape) {
+  h1 { font-size: clamp(1rem, 4vw, 1.8rem); margin: 4px 0; }
+  h3 { font-size: 1rem; margin: 4px 0; }
+  #time { font-size: 1.3rem; }
+  .time-list { gap: 4px; }
+  .time-list li { margin: 2px; }
+  .time-btn {
+    min-width: 70px;
+    min-height: 40px;
+    padding: .35rem .8rem;
+    font-size: 1rem;
+  }
+  .board {
+    width: min(60vw, 78vh, 500px);
+    height: min(60vw, 78vh, 500px);
+  }
+  @supports (height: 100dvh) {
+    .board {
+      width: min(60vw, 78dvh, 500px);
+      height: min(60vw, 78dvh, 500px);
+    }
+  }
+}
+
+/* Очень узкие телефоны (≤380px) */
+@media (max-width: 380px) {
+  h1 { font-size: 1.3rem; padding: 0 10px; }
+  .board { border-radius: 16px; }
+  .time-btn {
+    min-width: 76px;
+    padding: .5rem .7rem;
+    font-size: .95rem;
+  }
 }
